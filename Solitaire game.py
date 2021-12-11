@@ -10,7 +10,6 @@ def main():
 
     playingArea.displayStacks(gameState)
 
-    
 
     playgame = True
     while playgame == True:
@@ -28,7 +27,5 @@ def main():
     #Add to top 10 if score is a new top 10
     #Display top 10
     #Ask to play again
-
-
 
 main()

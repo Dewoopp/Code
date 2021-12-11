@@ -34,9 +34,11 @@ class CardDeck:
                 currCard = Card(self.suits[i], self.cardNum[j], self.colours[i], currfileName)
                 #Appends all cards to the cards array
                 self.cards.append(currCard)
+        #Shuffles the deck
+        self.shuffleDeck()
 
-        
-    def shuffle(self):
+
+    def shuffleDeck(self):
         #Shuffle the cards
         random.shuffle(self.cards)
 
@@ -45,3 +47,9 @@ class CardDeck:
         print(len(self.cards))
         for m in range(len(self.cards)):
             print(self.cards[m].cardName())
+    
+    def removeTop(self):
+        self.cards.remove(self.topCard())
+
+    def topCard(self):
+        return self.cards[0]
