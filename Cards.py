@@ -53,3 +53,6 @@ class CardDeck:
 
     def topCard(self):
         return self.cards[0]
+
+    def isEmpty(self):
+        return len(self.cards) == 0

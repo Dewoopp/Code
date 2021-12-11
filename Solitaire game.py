@@ -9,7 +9,9 @@ def main():
     playingArea = PlayingArea()
 
     playingArea.displayStacks(gameState)
-
+    playingArea.displaySuitStacks(gameState)
+    playingArea.displayDeckDiscard(gameState)
+    playingArea.displayDeck(gameState)
 
     playgame = True
     while playgame == True:
