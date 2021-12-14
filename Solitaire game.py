@@ -1,6 +1,6 @@
 from GameState import GameState
 from graphics import GraphWin, Rectangle, Point, _root, Image
-import tkinter as tk
+import tkinter as Tk
 from playArea import PlayingArea
 
 def main():
@@ -12,6 +12,8 @@ def main():
     playingArea.displaySuitStacks(gameState)
     playingArea.displayDeckDiscard(gameState)
     playingArea.displayDeck(gameState)
+    
+    #playingArea.root.mainloop()
 
     playgame = True
     while playgame == True:
