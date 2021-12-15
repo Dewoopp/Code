@@ -1,7 +1,6 @@
 from graphics import GraphWin, Rectangle, Point, _root, Image
 import tkinter as tk
 from GameState import GameState
-import time
 
 class PlayingArea:
 
@@ -71,7 +70,3 @@ class PlayingArea:
         self.deckImg.anchor.y = e.y
         self.deckImg.draw(self.window)
         self.inDrag = False
-        
-        #time.sleep(0.001)
-
-        #self.window.redraw()
