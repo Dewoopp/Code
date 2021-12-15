@@ -15,6 +15,8 @@ class PlayingArea:
         #Defines the window
         self.window = GraphWin("Solitaire", 1000, 750)
         self.window.bind('<B1-Motion>', self.drag)
+        self.window.bind('<ButtonRelease-1>', self.drop)
+        self.window.bind('<ButtonPress-1>', self.click)
 
         background = Rectangle(Point(0,0), Point(1000, 750))
         background.setFill("green")
@@ -30,7 +32,11 @@ class PlayingArea:
         self.pos["DeckDiscard"] = Point(825, 475)
 
         self.inDrag = False
-    
+        self.firstClick = True
+
+        self.cardHeight = 109
+        self.cardWidth = 78
+
     def displayStacks(self, gameState):
         for i in range(7):
             for j in range(i + 1):
@@ -64,9 +70,27 @@ class PlayingArea:
     def drag(self, e):
         if self.inDrag:
             return
-        self.inDrag = True     
-        self.deckImg.undraw()
-        self.deckImg.anchor.x = e.x
-        self.deckImg.anchor.y = e.y
-        self.deckImg.draw(self.window)
-        self.inDrag = False
+        #if self.firstClick:
+        #    self.firstClick = False
+            
+
+        # self.inDrag = True     
+        # self.deckImg.undraw()
+        # self.deckImg.anchor.x = e.x
+        # self.deckImg.anchor.y = e.y
+        # self.deckImg.draw(self.window)
+        # self.inDrag = False
+
+    def drop(self, e):
+        pass
+        #self.firstClick = True
+
+    def click(self, e):
+        self.findClickedCard(e.x, e.y)
+
+    def findClickedCard(self, x, y):
+        print(self.isClicked(x, y, self.pos["Deck"]))
+
+    def isClicked(self, x, y, topLeft):
+        print(topLeft.x, topLeft.y, x, y, topLeft.x + self.cardWidth, topLeft.y + self.cardHeight)
+        return (topLeft.x - self.cardWidth/2 <= x <= topLeft.x + self.cardWidth/2) and (topLeft.y - self.cardHeight/2 <= y <= topLeft.y + self.cardHeight/2)
