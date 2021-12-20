@@ -37,6 +37,10 @@ class PlayingArea:
         self.cardHeight = 109
         self.cardWidth = 78
 
+        self.deckDiscardImg = None
+        self.deckImg = None
+        self.suitStackTopImg = [None for i in range(4)]
+
     def displayStacks(self, gameState):
         for i in range(7):
             for j in range(i + 1):
@@ -52,7 +56,11 @@ class PlayingArea:
             suitStackPos = Point(self.pos["SuitStacks"][i].x, self.pos["SuitStacks"][i].y)
             if gameState.suitStacks[i].isEmpty():
                 topSuitStack = Image(suitStackPos, "Cards/blank_card.png")
-            topSuitStack.draw(self.window)
+                topSuitStack.draw(self.window)
+                self.suitStackTopImg[i] = None
+            else:
+                topSuitStack = Image(suitStackPos, gameState.suitStacks[i].cards[-1].getFileName())
+                self.suitStackTopImg[i] = topSuitStack.draw(self.window)
 
     def displayDeckDiscard(self, gameState):
         for i in range(min(3, len(gameState.deckDiscard))):
@@ -68,8 +76,9 @@ class PlayingArea:
         self.deckImg = topDeck.draw(self.window)
 
     def drag(self, e):
-        if self.inDrag:
+        if self.inDrag or self.clickImg is None:
             return
+
         if self.firstClick:
             self.firstClick = False
         
@@ -92,11 +101,11 @@ class PlayingArea:
             return self.deckImg
         elif self.isClicked(x, y, self.pos["DeckDiscard"]):
             return self.deckDiscardImg
-        # for i in range(len(GameState.suitStacks)):
-        #     if self.isClicked(x, y, self.pos["SuitStacks"][i]):
-        #         return self.GameState.suitStacks
-        # else:
-        #     return None
+        for i in range(len(self.pos["SuitStacks"])):
+            if self.isClicked(x, y, self.pos["SuitStacks"][i]) and self.suitStackTopImg[i] is not None:
+                return self.suitStackTopImg[i]
+        else:
+            return None
 
     # def findClickedCard2(self, x, y):
     #     for area in self.pos:
