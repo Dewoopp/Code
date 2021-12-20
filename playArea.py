@@ -58,7 +58,7 @@ class PlayingArea:
         for i in range(min(3, len(gameState.deckDiscard))):
             deckDiscardPos = Point(self.pos["DeckDiscard"][i].x + i * 30, self.pos["DeckDiscard"][i].y)
             topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-i].getFileName())
-            topDeckDiscard.draw(self.window)
+            self.deckDiscardImg = topDeckDiscard.draw(self.window)
     
     def displayDeck(self, gameState):
         if gameState.cardDeck.isEmpty():
@@ -70,27 +70,43 @@ class PlayingArea:
     def drag(self, e):
         if self.inDrag:
             return
-        #if self.firstClick:
-        #    self.firstClick = False
-            
+        if self.firstClick:
+            self.firstClick = False
+        
 
-        # self.inDrag = True     
-        # self.deckImg.undraw()
-        # self.deckImg.anchor.x = e.x
-        # self.deckImg.anchor.y = e.y
-        # self.deckImg.draw(self.window)
-        # self.inDrag = False
+        self.inDrag = True     
+        self.clickImg.undraw()
+        self.clickImg.anchor.x = e.x
+        self.clickImg.anchor.y = e.y
+        self.clickImg.draw(self.window)
+        self.inDrag = False
 
     def drop(self, e):
-        pass
-        #self.firstClick = True
+        self.firstClick = True
 
     def click(self, e):
-        self.findClickedCard(e.x, e.y)
+        self.clickImg = self.findClickedCard(e.x, e.y)
 
     def findClickedCard(self, x, y):
-        print(self.isClicked(x, y, self.pos["Deck"]))
+        if self.isClicked(x, y, self.pos["Deck"]):
+            return self.deckImg
+        elif self.isClicked(x, y, self.pos["DeckDiscard"]):
+            return self.deckDiscardImg
+        # for i in range(len(GameState.suitStacks)):
+        #     if self.isClicked(x, y, self.pos["SuitStacks"][i]):
+        #         return self.GameState.suitStacks
+        # else:
+        #     return None
 
-    def isClicked(self, x, y, topLeft):
-        print(topLeft.x, topLeft.y, x, y, topLeft.x + self.cardWidth, topLeft.y + self.cardHeight)
-        return (topLeft.x - self.cardWidth/2 <= x <= topLeft.x + self.cardWidth/2) and (topLeft.y - self.cardHeight/2 <= y <= topLeft.y + self.cardHeight/2)
+    # def findClickedCard2(self, x, y):
+    #     for area in self.pos:
+    #         for card in self.pos[area]:
+    #             if card.isClicked(x, y):
+    #                 return card
+    #     else:
+    #         return None
+
+
+    def isClicked(self, x, y, midPoint):
+        #print(midPoint.x, midPoint.y, x, y, midPoint.x + self.cardWidth, midPoint.y + self.cardHeight)
+        return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
