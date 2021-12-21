@@ -8,10 +8,7 @@ def main():
     gameState = GameState()
     playingArea = PlayingArea()
 
-    playingArea.displayStacks(gameState)
-    playingArea.displaySuitStacks(gameState)
-    playingArea.displayDeckDiscard(gameState)
-    playingArea.displayDeck(gameState)
+    playingArea.draw(gameState)
     
     #playingArea.root.mainloop()
 

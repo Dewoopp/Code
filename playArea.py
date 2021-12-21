@@ -1,6 +1,5 @@
 from graphics import GraphWin, Rectangle, Point, _root, Image
 import tkinter as tk
-from GameState import GameState
 
 class PlayingArea:
 
@@ -37,19 +36,31 @@ class PlayingArea:
         self.cardHeight = 109
         self.cardWidth = 78
 
+        self.stackCardDist = 30
+
         self.deckDiscardImg = None
         self.deckImg = None
-        self.suitStackTopImg = [None for i in range(4)]
+        self.suitStackTopImg = [None for _ in range(4)]
+        self.stackTopImg =  [[] for _ in range(7)]
+
+    def draw(self, gameState):
+        self.displayStacks(gameState)
+        self.displaySuitStacks(gameState)
+        self.displayDeckDiscard(gameState)
+        self.displayDeck(gameState)
+        self.gameState = gameState
 
     def displayStacks(self, gameState):
-        for i in range(7):
-            for j in range(i + 1):
-                topCardPos = Point(self.pos["Stacks"][i].x, self.pos["Stacks"][i].y + j * 30)
+        for i in range(len(gameState.cardStacks)):
+            for j in range(len(gameState.cardStacks[i].cards)):
+                topCardPos = Point(self.pos["Stacks"][i].x, self.pos["Stacks"][i].y + j * self.stackCardDist)
                 if gameState.cardStacks[i].backNum > j:
                     topCardDeck = Image(topCardPos, "Cards/card_back.png")
+                    topCardDeck.draw(self.window)
+                    self.stackTopImg[i].append(None)
                 else:
                     topCardDeck = Image(topCardPos, gameState.cardStacks[i].cards[j].getFileName())
-                topCardDeck.draw(self.window)
+                    self.stackTopImg[i].append(topCardDeck.draw(self.window))
         
     def displaySuitStacks(self, gameState):
         for i in range(4):
@@ -99,13 +110,19 @@ class PlayingArea:
     def findClickedCard(self, x, y):
         if self.isClicked(x, y, self.pos["Deck"]):
             return self.deckImg
-        elif self.isClicked(x, y, self.pos["DeckDiscard"]):
+        if self.isClicked(x, y, self.pos["DeckDiscard"]):
             return self.deckDiscardImg
         for i in range(len(self.pos["SuitStacks"])):
             if self.isClicked(x, y, self.pos["SuitStacks"][i]) and self.suitStackTopImg[i] is not None:
                 return self.suitStackTopImg[i]
-        else:
-            return None
+        for i in range(len(self.pos["Stacks"])):
+            numCards = len(self.gameState.cardStacks[i].cards)
+            for j in range(numCards):
+                newXPos = self.pos["Stacks"][i].x
+                newYPos = self.pos["Stacks"][i].y + self.stackCardDist * (numCards - j - 1)
+                if self.isClicked(x, y, Point(newXPos, newYPos)):
+                    return self.stackTopImg[i][numCards - j - 1]
+        return None
 
     # def findClickedCard2(self, x, y):
     #     for area in self.pos:
