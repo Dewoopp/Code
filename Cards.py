@@ -23,15 +23,15 @@ class CardDeck:
         self.cards = []
         self.suits = ["D", "C", "H", "S"]
         self.colours = ["R", "B", "R", "B"]
-        self.cardNum = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+        self.cardNames = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 
         #Initialises the objects from the card class
         for i in range(4):
             for j in range(13):
                 #Gives the card the file name as given by the cutOutCards.py file
-                currfileName = "Cards/" + self.suits[i] + self.cardNum[j] + ".png"
+                currfileName = "Cards/" + self.suits[i] + self.cardNames[j] + ".png"
                 #Defines the current Card
-                currCard = Card(self.suits[i], self.cardNum[j], self.colours[i], currfileName)
+                currCard = Card(self.suits[i], j + 1, self.colours[i], currfileName)
                 #Appends all cards to the cards array
                 self.cards.append(currCard)
         #Shuffles the deck

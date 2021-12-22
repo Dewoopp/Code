@@ -26,4 +26,24 @@ class GameState:
 
         #Creates the interactive discard of the deck
         self.deckDiscard = []
-        
+
+    def makeMove(self, clickedCards, dropName, dropIdx):
+        #find source card
+        if clickedCards[0] in self.deckDiscard:
+            sourceCards = [self.deckDiscard[-1]]
+            self.deckDiscard.remove(sourceCards[0])
+        for i in range(4):
+            if clickedCards[0] in self.suitStacks[i].cards:
+                sourceCards = [self.suitStacks[i].cards[-1]]
+                self.suitStacks[i].cards.remove(sourceCards[0])
+        for i in range(7):
+            cardStackIdx = self.cardStacks[i].find(clickedCards[0])
+            if cardStackIdx is not None:
+                sourceCards = self.cardStacks[i].getBelow(cardStackIdx)
+                self.cardStacks[i].removeBelow(cardStackIdx)
+        #find drop location
+        if dropName == "SuitStacks":
+            self.suitStacks[dropIdx].append(sourceCards[0])
+        elif dropName == "Stacks":
+            for card in sourceCards:
+                self.cardStacks[dropIdx].append(card)

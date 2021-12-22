@@ -1,12 +1,13 @@
 from GameState import GameState
-from graphics import GraphWin, Rectangle, Point, _root, Image
-import tkinter as Tk
+from GameController import GameController
 from playArea import PlayingArea
 
 def main():
     
     gameState = GameState()
     playingArea = PlayingArea()
+    gameController = GameController(playingArea, gameState)
+    playingArea.setValidator(gameController.validDrop)
 
     playingArea.draw(gameState)
     
