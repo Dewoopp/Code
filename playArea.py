@@ -1,3 +1,4 @@
+from GameState import GameState
 from graphics import GraphWin, Rectangle, Point, _root, Image
 import tkinter as tk
 
@@ -74,6 +75,7 @@ class PlayingArea:
                 self.suitStackTopImg[i] = topSuitStack.draw(self.window)
 
     def displayDeckDiscard(self, gameState):
+        self.deckDiscardImg = None
         for i in range(min(3, len(gameState.deckDiscard))):
             deckDiscardPos = Point(self.pos["DeckDiscard"][i].x + i * 30, self.pos["DeckDiscard"][i].y)
             topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-i].getFileName())
@@ -87,44 +89,48 @@ class PlayingArea:
         self.deckImg = topDeck.draw(self.window)
 
     def drag(self, e):
-        if self.inDrag or self.clickImg is None:
+        if self.inDrag or len(self.clickImgs) == 0:
             return
 
         if self.firstClick:
             self.firstClick = False
         
 
-        self.inDrag = True     
-        self.clickImg.undraw()
-        self.clickImg.anchor.x = e.x
-        self.clickImg.anchor.y = e.y
-        self.clickImg.draw(self.window)
+        self.inDrag = True
+        for i, img in enumerate(self.clickImgs):
+            img.undraw()
+            img.anchor.x = e.x + i * self.stackCardDist
+            img.anchor.y = e.y
+            img.draw(self.window)
         self.inDrag = False
 
     def drop(self, e):
         self.firstClick = True
+        _, dropName, dropIdx, dropCard = self.findEventLocation(e.x, e.y)
+        #self.clickImgs.anchor = self.pos[dropPos]
 
     def click(self, e):
-        self.clickImg = self.findClickedCard(e.x, e.y)
+        self.clickImgs, self.clickPos, self.clickIdx, self.clickCard = self.findEventLocation(e.x, e.y)
 
-    def findClickedCard(self, x, y):
+    def findEventLocation(self, x, y):
         if self.isClicked(x, y, self.pos["Deck"]):
-            return self.deckImg
+            return [], "Deck", 0, None
         if self.isClicked(x, y, self.pos["DeckDiscard"]):
-            return self.deckDiscardImg
+            return [self.deckDiscardImg], "DeckDiscard", 0, self.gameState.deckDiscard[-1] if len(self.gameState.deckDiscard) > 0 else None
         for i in range(len(self.pos["SuitStacks"])):
             if self.isClicked(x, y, self.pos["SuitStacks"][i]) and self.suitStackTopImg[i] is not None:
-                return self.suitStackTopImg[i]
+                return [self.suitStackTopImg[i]], "SuitStacks", i, self.gameState.suitStacks[i].cards[-1] if len(self.gameState.suitStacks[i].cards) > 0 else None
         for i in range(len(self.pos["Stacks"])):
             numCards = len(self.gameState.cardStacks[i].cards)
             for j in range(numCards):
                 newXPos = self.pos["Stacks"][i].x
                 newYPos = self.pos["Stacks"][i].y + self.stackCardDist * (numCards - j - 1)
                 if self.isClicked(x, y, Point(newXPos, newYPos)):
-                    return self.stackTopImg[i][numCards - j - 1]
-        return None
+                    imgList = self.stackTopImg[i][numCards - j - 1: numCards]
+                    return imgList, "Stacks", i, self.gameState.cardStacks[i].cards[numCards - j - 1]
+        return [], "", 0, None
 
-    # def findClickedCard2(self, x, y):
+    # def findEventLocation2(self, x, y):
     #     for area in self.pos:
     #         for card in self.pos[area]:
     #             if card.isClicked(x, y):
