@@ -10,7 +10,7 @@ class CardStack:
             return None
     
     def removeBelow(self, idx):
-        self.cards = self.cards[idx:]
+        self.cards = self.cards[:idx]
     
     def getBelow(self, idx):
         return self.cards[idx:]

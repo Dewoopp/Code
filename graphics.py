@@ -890,12 +890,13 @@ class Image(GraphicsObject):
         Image.idCount = Image.idCount + 1
         if len(pixmap) == 1: # file name provided
             self.img = tk.PhotoImage(file=pixmap[0], master=_root)
+            self.filename = pixmap[0]
         else: # width and height provided
             width, height = pixmap
             self.img = tk.PhotoImage(master=_root, width=width, height=height)
 
     def __repr__(self):
-        return "Image({}, {}, {})".format(self.anchor, self.getWidth(), self.getHeight())
+        return "Image({}, {}, {}, {})".format(self.anchor, self.getWidth(), self.getHeight(), self.filename if self.filename else "")
                 
     def _draw(self, canvas, options):
         p = self.anchor
