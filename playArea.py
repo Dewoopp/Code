@@ -150,7 +150,7 @@ class PlayingArea:
             return [self.deckDiscardImg[-1]], "DeckDiscard", 0, [self.gameState.deckDiscard[-1]] if len(self.gameState.deckDiscard) > 0 else []
         for i in range(len(self.pos["SuitStacks"])):
             if self.isClicked(x, y, self.pos["SuitStacks"][i]):
-                return [self.suitStackTopImg[i]], "SuitStacks", i, [self.gameState.suitStacks[i].cards[-1]] if len(self.gameState.suitStacks[i].cards) > 0 else None
+                return [self.suitStackTopImg[i]], "SuitStacks", i, [self.gameState.suitStacks[i].cards[-1]] if len(self.gameState.suitStacks[i].cards) > 0 else []
         for i in range(len(self.pos["Stacks"])):
             numCards = len(self.gameState.cardStacks[i].cards)
             for j in range(numCards):
