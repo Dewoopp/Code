@@ -119,8 +119,8 @@ class PlayingArea:
         self.inDrag = True
         for i, img in enumerate(self.clickImgs):
             img.undraw()
-            img.anchor.x = e.x + i * self.stackCardDist
-            img.anchor.y = e.y
+            img.anchor.x = e.x
+            img.anchor.y = e.y + i * self.stackCardDist
             img.draw(self.window)
             sleep(0.001)
         self.inDrag = False
@@ -136,31 +136,32 @@ class PlayingArea:
             self.dropToBe = None
 
     def doDrop(self, x, y):
-        _, dropName, dropIdx, dropCard = self.findEventLocation(x, y)
-        self.validatorFunc(self.clickName, self.clickIdx, self.clickCards, dropName, dropIdx, dropCard)
+        _, dropName, dropIdx, dropCard, dropStackLocation = self.findEventLocation(x, y)
+        self.validatorFunc(self.clickName, self.clickIdx, self.clickCards, dropName, dropIdx, dropCard, dropStackLocation)
 
 
     def click(self, e):
-        self.clickImgs, self.clickName, self.clickIdx, self.clickCards = self.findEventLocation(e.x, e.y)
+        self.clickImgs, self.clickName, self.clickIdx, self.clickCards, _ = self.findEventLocation(e.x, e.y)
 
     def findEventLocation(self, x, y):
         if self.isClicked(x, y, self.pos["Deck"]):
-            return [], "Deck", 0, []
+            return [], "Deck", 0, [], 0
         if self.isClicked(x, y, self.pos["DeckDiscard"]):
-            return [self.deckDiscardImg[-1]], "DeckDiscard", 0, [self.gameState.deckDiscard[-1]] if len(self.gameState.deckDiscard) > 0 else []
+            return [self.deckDiscardImg[-1]], "DeckDiscard", 0, [self.gameState.deckDiscard[-1]] if len(self.gameState.deckDiscard) > 0 else [], 0
         for i in range(len(self.pos["SuitStacks"])):
             if self.isClicked(x, y, self.pos["SuitStacks"][i]):
-                return [self.suitStackTopImg[i]], "SuitStacks", i, [self.gameState.suitStacks[i].cards[-1]] if len(self.gameState.suitStacks[i].cards) > 0 else []
+                return [self.suitStackTopImg[i]], "SuitStacks", i, [self.gameState.suitStacks[i].cards[-1]] if len(self.gameState.suitStacks[i].cards) > 0 else [], 0
         for i in range(len(self.pos["Stacks"])):
             numCards = len(self.gameState.cardStacks[i].cards)
+            # Searching from bottom to top, so that we take the lower card if the card is covering a higher card
             for j in range(numCards):
                 newXPos = self.pos["Stacks"][i].x
                 newYPos = self.pos["Stacks"][i].y + self.stackCardDist * (numCards - j - 1)
                 if self.isClicked(x, y, Point(newXPos, newYPos)):
                     imgList = self.stackTopImg[i][numCards - j - 1:]
                     cardList = self.gameState.cardStacks[i].cards[numCards - j - 1:]
-                    return imgList, "Stacks", i, cardList
-        return [], "", 0, []
+                    return imgList, "Stacks", i, cardList, j
+        return [], "", 0, [], 0
 
     # def findEventLocation2(self, x, y):
     #     for area in self.pos:
