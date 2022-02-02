@@ -7,7 +7,7 @@ def main():
     gameState = GameState()
     playingArea = PlayingArea()
     gameController = GameController(playingArea, gameState)
-    playingArea.setValidator(gameController.makeValidDrop)
+    playingArea.setValidator(gameController.makeValidDrop, gameController.turnCards)
 
     playingArea.draw(gameState)
     

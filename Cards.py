@@ -10,7 +10,7 @@ class Card:
 
     #Getter fucntion to return the card name
     def cardName(self):
-        cardName = self.suit + self.number
+        cardName = self.suit + str(self.number)
         return cardName
 
     def getFileName(self):

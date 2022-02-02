@@ -58,9 +58,10 @@ class PlayingArea:
 
         self.dropToBe = None
 
-    # Adds a callback to call the validator function
-    def setValidator(self, validatorFunc):
+    # Adds a callback to call the validator function and the function to turn over the cards
+    def setValidator(self, validatorFunc, turnCardsFunc):
         self.validatorFunc = validatorFunc
+        self.turnCardsFunc = turnCardsFunc
 
     # Undraws then redraws the entire board - used after dropping anything in order to update the GUI
     def draw(self, gameState):
@@ -130,8 +131,8 @@ class PlayingArea:
         self.deckDiscardImg = []
         # Finds the minimum of 3 and the length of the deck discard - makes the max cards displayed 3
         for i in range(min(3, len(gameState.deckDiscard))):
-            deckDiscardPos = Point(self.pos["DeckDiscard"][i].x + i * 30, self.pos["DeckDiscard"][i].y)
-            topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-i].getFileName())
+            deckDiscardPos = Point(self.pos["DeckDiscard"].x + i * 30, self.pos["DeckDiscard"].y)
+            topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-(i+1)].getFileName())
             self.deckDiscardImg.append(topDeckDiscard.draw(self.window))
     
     # Displays the deck
@@ -187,12 +188,14 @@ class PlayingArea:
     def click(self, e):
         # Sets the neccessary variables required for a click
         self.clickImgs, self.clickName, self.clickIdx, self.clickCards, _ = self.findEventLocation(e.x, e.y)
+        if self.clickName == "Deck":
+            self.turnCardsFunc()
 
     # This is used to set variables for both a drop and a click
     def findEventLocation(self, x, y):
         # If we clicked on the deck
         if self.isClicked(x, y, self.pos["Deck"]):
-            # The deck cannot be clicked or dropped on - so it will return almost no information
+            # The deck cannot be dropped on - so it will return almost no information
             return [], "Deck", 0, [], 0
         if self.isClicked(x, y, self.pos["DeckDiscard"]):
             return [self.deckDiscardImg[-1]], "DeckDiscard", 0, [self.gameState.deckDiscard[-1]] if len(self.gameState.deckDiscard) > 0 else [], 0
