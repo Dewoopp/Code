@@ -568,7 +568,10 @@ class Point(GraphicsObject):
     def _move(self, dx, dy):
         self.x = self.x + dx
         self.y = self.y + dy
-        
+
+    def findOffset(self, dx, dy):
+        return Point(self.x + dx, self.y + dy)
+
     def clone(self):
         other = Point(self.x,self.y)
         other.config = self.config.copy()

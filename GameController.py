@@ -36,7 +36,6 @@ class GameController:
             numToMove = min(3, len(self.gameState.cardDeck.cards))
             self.gameState.deckDiscard.extend(self.gameState.cardDeck.cards[:numToMove])
             self.gameState.cardDeck.cards = self.gameState.cardDeck.cards[numToMove:]
-            self.gameState.cardDeck.printDeck()
 
             # # Move and remove using list comp
             # moveList = self.gameState.cardDeck.cards[-min(3, len(self.gameState.cardDeck.cards)):]

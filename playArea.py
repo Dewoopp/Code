@@ -130,9 +130,10 @@ class PlayingArea:
     def displayDeckDiscard(self, gameState):
         self.deckDiscardImg = []
         # Finds the minimum of 3 and the length of the deck discard - makes the max cards displayed 3
-        for i in range(min(3, len(gameState.deckDiscard))):
+        numToDisplay = min(3, len(gameState.deckDiscard))
+        for i in range(numToDisplay):
             deckDiscardPos = Point(self.pos["DeckDiscard"].x + i * 30, self.pos["DeckDiscard"].y)
-            topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-(i+1)].getFileName())
+            topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-(numToDisplay-i)].getFileName())
             self.deckDiscardImg.append(topDeckDiscard.draw(self.window))
     
     # Displays the deck
@@ -186,7 +187,7 @@ class PlayingArea:
         self.validatorFunc(self.clickName, self.clickIdx, self.clickCards, dropName, dropIdx, dropCard, dropStackLocation)
 
     def click(self, e):
-        # Sets the neccessary variables required for a click
+        # Sets the neccessary variables and uses them later when dropping
         self.clickImgs, self.clickName, self.clickIdx, self.clickCards, _ = self.findEventLocation(e.x, e.y)
         if self.clickName == "Deck":
             self.turnCardsFunc()
@@ -197,7 +198,7 @@ class PlayingArea:
         if self.isClicked(x, y, self.pos["Deck"]):
             # The deck cannot be dropped on - so it will return almost no information
             return [], "Deck", 0, [], 0
-        if self.isClicked(x, y, self.pos["DeckDiscard"]):
+        if self.isClicked(x, y, self.pos["DeckDiscard"].findOffset((min(3, len(self.gameState.deckDiscard))-1)*30, 0)):
             return [self.deckDiscardImg[-1]], "DeckDiscard", 0, [self.gameState.deckDiscard[-1]] if len(self.gameState.deckDiscard) > 0 else [], 0
         for i in range(len(self.pos["SuitStacks"])):
             if self.isClicked(x, y, self.pos["SuitStacks"][i]):
@@ -223,5 +224,4 @@ class PlayingArea:
     #         return None
 
     def isClicked(self, x, y, midPoint):
-        #print(midPoint.x, midPoint.y, x, y, midPoint.x + self.cardWidth, midPoint.y + self.cardHeight)
         return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
