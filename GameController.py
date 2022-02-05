@@ -24,6 +24,8 @@ class GameController:
             return clickedCards[0].suit == onCard[0].suit and clickedCards[0].number == onCard[0].number + 1
         # If we are dropping on a stack and we are dropping at the end of a stack
         if name == "Stacks" and stackLocation == 0:
+            if len(onCard) == 0:
+                return clickedCards[0].number == 13
             return clickedCards[0].colour != onCard[0].colour and clickedCards[0].number == onCard[0].number - 1
         return False
 

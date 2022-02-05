@@ -206,6 +206,11 @@ class PlayingArea:
         for i in range(len(self.pos["Stacks"])):
             numCards = len(self.gameState.cardStacks[i].cards)
             # Searching from bottom to top, so that we take the lower card if the card is covering a higher card
+            if numCards == 0:
+                newXPos = self.pos["Stacks"][i].x
+                newYPos = self.pos["Stacks"][i].y
+                if self.isClicked(x, y, Point(newXPos, newYPos)):
+                    return [], "Stacks", i, [], 0
             for j in range(numCards):
                 newXPos = self.pos["Stacks"][i].x
                 newYPos = self.pos["Stacks"][i].y + self.stackCardDist * (numCards - j - 1)

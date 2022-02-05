@@ -53,6 +53,7 @@ class CardDeck:
         self.swapCards(self.getCard("S", 7), 0)
         self.swapCards(self.getCard("C", 7), 2)
         self.swapCards(self.getCard("D", 8), 5)
+        self.swapCards(self.getCard("S", 13), 9)
 
     def getCard(self, suit, number):
         for card in self.cards:

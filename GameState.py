@@ -40,6 +40,7 @@ class GameState:
             cardStackIdx = self.cardStacks[i].find(clickedCards[0])
             if cardStackIdx is not None:
                 sourceCards = self.cardStacks[i].getBelow(cardStackIdx)
+                # Turns over the next card
                 if cardStackIdx == self.cardStacks[i].backNum:
                    self.cardStacks[i].backNum -= 1
                 self.cardStacks[i].removeBelow(cardStackIdx)
