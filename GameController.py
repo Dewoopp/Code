@@ -11,8 +11,10 @@ class GameController:
         dropValid = self.isValid(clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation)
         if dropValid:
             self.gameState.makeMove(clickedCards, name, idx)
+            if self.gameState.isGameOver():
+                print("You won")
         
-        self.playingArea.draw(self.gameState)
+        self.playingArea.draw()
 
     def isValid(self, clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation):
         # If we are dropping on a suitstack and the length of the cards we picked up is exactly 1

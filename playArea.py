@@ -4,7 +4,7 @@ from time import sleep
 class PlayingArea:
 
     # Defines the positions of everything on the window
-    def __init__(self):
+    def __init__(self, gameWindow, gameState):
         self.pos =  {
                     "Stacks": [],
                     "SuitStacks": [],
@@ -13,16 +13,16 @@ class PlayingArea:
                     }
         
         # Defines the window
-        self.window = GraphWin("Solitaire", 1000, 750)
-        # Binds function calls to actions from the user
-        self.window.bind('<B1-Motion>', self.drag)
-        self.window.bind('<ButtonRelease-1>', self.drop)
-        self.window.bind('<ButtonPress-1>', self.click)
+        self.gameWindow = gameWindow
+        self.window = self.gameWindow.window
 
-        # Sets the background colour and draws it on the window
-        background = Rectangle(Point(0,0), Point(1000, 750))
-        background.setFill("green")
-        background.draw(self.window)
+        # Sets the background colour
+        self.background = Rectangle(Point(0,0), Point(1000, 750))
+        self.background.setFill("green")
+
+        self.gameState = gameState
+        
+        self.backDrawn = False
         
         # These point positions are all the middle of the card
         # Adds the positions of the top of the stacks to the pos dictionary
@@ -58,23 +58,29 @@ class PlayingArea:
 
         self.dropToBe = None
 
+
     # Adds a callback to call the validator function and the function to turn over the cards
     def setValidator(self, validatorFunc, turnCardsFunc):
         self.validatorFunc = validatorFunc
         self.turnCardsFunc = turnCardsFunc
 
     # Undraws then redraws the entire board - used after dropping anything in order to update the GUI
-    def draw(self, gameState):
-        self.undraw()
-        self.displayStacks(gameState)
-        self.displaySuitStacks(gameState)
-        self.displayDeckDiscard(gameState)
-        self.displayDeck(gameState)
-        # Defines the gameState
-        self.gameState = gameState
+    def draw(self):
+        self.undraw(False)
+        if not self.backDrawn:
+            self.background.draw(self.window)
+            self.backDrawn = True
+        self.displayStacks()
+        self.displaySuitStacks()
+        self.displayDeckDiscard()
+        self.displayDeck()
+        
 
     # Undraws everything
-    def undraw(self):
+    def undraw(self, screenChange):
+        if screenChange:
+            self.background.undraw()
+            self.backDrawn = False
         for card in self.removeImgs:
             card.undraw()
         for card in self.deckDiscardImg:
@@ -90,16 +96,16 @@ class PlayingArea:
             self.deckImg.undraw()
 
     # Displays the stacks
-    def displayStacks(self, gameState):
+    def displayStacks(self):
         # Loop through the card stacks
-        for i in range(len(gameState.cardStacks)):
+        for i in range(len(self.gameState.cardStacks)):
             self.stackTopImg[i] = []
             # Loop through the cards in the stacks
-            for j in range(len(gameState.cardStacks[i].cards)):
+            for j in range(len(self.gameState.cardStacks[i].cards)):
                 # Defines the location of the current card
                 topCardPos = Point(self.pos["Stacks"][i].x, self.pos["Stacks"][i].y + j * self.stackCardDist)
                 # If the current position is less than the number of backwards facing cards
-                if gameState.cardStacks[i].backNum > j:
+                if self.gameState.cardStacks[i].backNum > j:
                     # Instead of displaying the image, it displays the card back instead
                     topCardDeck = Image(topCardPos, "Cards/card_back.png")
                     # Adds to the removeImgs list and draws it on the screen
@@ -108,38 +114,38 @@ class PlayingArea:
 
                 else:
                     # Gets the image
-                    topCardDeck = Image(topCardPos, gameState.cardStacks[i].cards[j].getFileName())
+                    topCardDeck = Image(topCardPos, self.gameState.cardStacks[i].cards[j].getFileName())
                     # Display the image with the filename
                     self.stackTopImg[i].append(topCardDeck.draw(self.window))
 
     # Displays the suit stacks
-    def displaySuitStacks(self, gameState):
+    def displaySuitStacks(self):
         for i in range(4):
             suitStackPos = Point(self.pos["SuitStacks"][i].x, self.pos["SuitStacks"][i].y)
             # If the suit stack is empty then display a blank card
-            if gameState.suitStacks[i].isEmpty():
+            if self.gameState.suitStacks[i].isEmpty():
                 topSuitStack = Image(suitStackPos, "Cards/blank_card.png")
                 self.removeImgs.append(topSuitStack.draw(self.window))
                 self.suitStackTopImg[i] = None
             else:
                 # Gets the image of the card at the top of the suit stack
-                topSuitStack = Image(suitStackPos, gameState.suitStacks[i].cards[-1].getFileName())
+                topSuitStack = Image(suitStackPos, self.gameState.suitStacks[i].cards[-1].getFileName())
                 self.suitStackTopImg[i] = topSuitStack.draw(self.window)
 
     # Displays the deck discard
-    def displayDeckDiscard(self, gameState):
+    def displayDeckDiscard(self):
         self.deckDiscardImg = []
         # Finds the minimum of 3 and the length of the deck discard - makes the max cards displayed 3
-        numToDisplay = min(3, len(gameState.deckDiscard))
+        numToDisplay = min(3, len(self.gameState.deckDiscard))
         for i in range(numToDisplay):
             deckDiscardPos = Point(self.pos["DeckDiscard"].x + i * 30, self.pos["DeckDiscard"].y)
-            topDeckDiscard = Image(deckDiscardPos, gameState.deckDiscard[-(numToDisplay-i)].getFileName())
+            topDeckDiscard = Image(deckDiscardPos, self.gameState.deckDiscard[-(numToDisplay-i)].getFileName())
             self.deckDiscardImg.append(topDeckDiscard.draw(self.window))
     
     # Displays the deck
-    def displayDeck(self, gameState):
+    def displayDeck(self):
         # Checks if the deck is empty
-        if gameState.cardDeck.isEmpty():
+        if self.gameState.cardDeck.isEmpty():
             topDeck = Image(self.pos["Deck"], "Cards/blank_card.png")
         else:
             topDeck = Image(self.pos["Deck"], "Cards/card_back.png")

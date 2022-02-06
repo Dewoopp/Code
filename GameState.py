@@ -50,3 +50,9 @@ class GameState:
         elif dropName == "Stacks":
             for card in sourceCards:
                 self.cardStacks[dropIdx].append(card)
+
+    def isGameOver(self):
+        for stack in self.cardStacks:
+            if stack.backNum != 0:
+                return False
+        return True

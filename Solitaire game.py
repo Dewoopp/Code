@@ -1,21 +1,31 @@
 from GameState import GameState
 from GameController import GameController
 from playArea import PlayingArea
+from homeScreen import HomeScreen
+from gameWindow import GameWindow
 
 def main():
     
     gameState = GameState()
-    playingArea = PlayingArea()
+
+    # Creates the windows
+    gameWindow = GameWindow(gameState)
+    homeScreen = HomeScreen(gameWindow)
+    playingArea = PlayingArea(gameWindow, gameState)
+    gameWindow.addScreens(homeScreen, playingArea)
+    gameWindow.setActiveScreen(homeScreen)
+
+    
     gameController = GameController(playingArea, gameState)
     playingArea.setValidator(gameController.makeValidDrop, gameController.turnCards)
 
-    playingArea.draw(gameState)
-    
+    gameWindow.drawActiveScreen()
+        
     #playingArea.root.mainloop()
 
     playgame = True
     while playgame == True:
-        clickPos = playingArea.window.getMouse()
+        clickPos = gameWindow.getMouse()
         if clickPos is None:
             break
         # mouseX = int(clickPos.x)
