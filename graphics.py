@@ -315,7 +315,8 @@ class GraphWin(tk.Canvas):
         self.mouseY = None
         while self.mouseX == None or self.mouseY == None:
             self.update()
-            if self.isClosed(): raise GraphicsError("getMouse in closed window")
+            if self.isClosed(): 
+                return None # raise GraphicsError("getMouse in closed window")
             time.sleep(.1) # give up thread
         x,y = self.toWorld(self.mouseX, self.mouseY)
         self.mouseX = None

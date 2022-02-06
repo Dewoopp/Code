@@ -16,8 +16,10 @@ def main():
     playgame = True
     while playgame == True:
         clickPos = playingArea.window.getMouse()
-        mouseX = int(clickPos.x)
-        mouseY = int(clickPos.y)
+        if clickPos is None:
+            break
+        # mouseX = int(clickPos.x)
+        # mouseY = int(clickPos.y)
     #Load top 10 score
     #Check clicked on deck
     #Check if clicked on one of 7 packs
