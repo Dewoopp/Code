@@ -2,10 +2,11 @@ from GameState import GameState
 
 
 class GameController:
-    def __init__(self, playingArea, gameState):
+    def __init__(self, playingArea, gameState, gameDb):
         self.playingArea = playingArea
         self.gameState = gameState
 
+        self.gameDb = gameDb
 
     def makeValidDrop(self, clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation):
         dropValid = self.isValid(clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation)

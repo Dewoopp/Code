@@ -1,4 +1,4 @@
-from graphics import GraphWin, Rectangle, Point, _root, Image
+from graphics import GraphWin, Rectangle, Point, _root, Image, Text
 from time import sleep
 
 class PlayingArea:

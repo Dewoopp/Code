@@ -3,24 +3,34 @@ from GameController import GameController
 from playArea import PlayingArea
 from homeScreen import HomeScreen
 from gameWindow import GameWindow
+from Database import GameDb
 
 def main():
-    
+
+    gameDb = GameDb()
+    #gameDb.deleteTable()
+    #gameDb.createTestData()
+    #gameDb.getData()
+
     gameState = GameState()
 
     # Creates the windows
     gameWindow = GameWindow(gameState)
-    homeScreen = HomeScreen(gameWindow)
+    homeScreen = HomeScreen(gameWindow, gameDb)
     playingArea = PlayingArea(gameWindow, gameState)
     gameWindow.addScreens(homeScreen, playingArea)
     gameWindow.setActiveScreen(homeScreen)
 
     
-    gameController = GameController(playingArea, gameState)
+    gameController = GameController(playingArea, gameState, gameDb)
     playingArea.setValidator(gameController.makeValidDrop, gameController.turnCards)
 
     gameWindow.drawActiveScreen()
-        
+    
+    
+    
+
+
     #playingArea.root.mainloop()
 
     playgame = True
