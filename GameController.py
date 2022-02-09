@@ -12,9 +12,6 @@ class GameController:
         dropValid = self.isValid(clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation)
         if dropValid:
             self.gameState.makeMove(clickedCards, name, idx)
-            if self.gameState.isGameOver():
-                print("You won")
-        
         self.playingArea.draw()
 
     def isValid(self, clickedName, clickedIdx, clickedCards, name, idx, onCard, stackLocation):

@@ -20,6 +20,13 @@ class PlayingArea:
         self.background = Rectangle(Point(0,0), Point(1000, 750))
         self.background.setFill("green")
 
+        self.winRect = Rectangle(Point(self.window.width/6, self.window.height/4), Point(self.window.width * 5/6, self.window.height * 3/4))
+        self.winRect.setFill("yellow")
+        self.winRectText = Text(Point(self.window.width/2, self.window.height/2), "YOU WIN!!!")
+        self.winRectText.setFace("courier")
+        self.winRectText.setFill("black")
+        self.winRectText.setSize(70)
+
         self.gameState = gameState
         
         self.backDrawn = False
@@ -191,6 +198,11 @@ class PlayingArea:
         _, dropName, dropIdx, dropCard, dropStackLocation = self.findEventLocation(x, y)
         # Calls the validation 
         self.validatorFunc(self.clickName, self.clickIdx, self.clickCards, dropName, dropIdx, dropCard, dropStackLocation)
+        if self.gameState.isGameOver():
+            print("You won")
+            self.winRect.draw(self.window)
+            self.winRectText.draw(self.window)
+
 
     def click(self, e):
         # Sets the neccessary variables and uses them later when dropping
