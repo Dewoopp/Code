@@ -1,12 +1,13 @@
 from turtle import window_height, window_width
 from urllib.parse import ParseResultBytes
+from Button import Button
 from graphics import GraphWin, Rectangle, Point, _root, Image, Text
 
 class HomeScreen:
     def __init__(self, gameWindow, gameDb):
         self.gameWindow = gameWindow
         self.window = self.gameWindow.window
-        self.playButton = None
+        self.playButton = Button(self.window.width/2, self.window.height * 7/8, "Play")
         self.background = Rectangle(Point(0,0), Point(1000, 750))
         self.background.setFill("grey")
 
@@ -16,8 +17,7 @@ class HomeScreen:
 
     def undraw(self):
         self.background.undraw()
-        if self.playButton is not None:
-            self.playButton.undraw()
+        self.playButton.undraw()
         if self.titleText is not None:
             self.titleText.undraw()
         if self.subtitleText is not None:
@@ -29,8 +29,6 @@ class HomeScreen:
 
     def draw(self):
         self.background.draw(self.window)
-        self.playButton = Rectangle(Point(200, 400), Point(300, 300))
-        self.playButton.setFill("purple")
         self.playButton.draw(self.window)
 
         self.titleText = Text(Point(self.window.width/2, self.window.height/8), "Solitaire")
@@ -59,7 +57,7 @@ class HomeScreen:
         for i, row in enumerate(data):
             lbRow = []
             for j, field in enumerate(row):
-                fieldText = Text(Point(self.window.width/3 + 100 * j, self.window.height/2 + 50 * i), field)
+                fieldText = Text(Point(self.window.width/3.35 + 100 * j, self.window.height/2 + 50 * i), field)
                 fieldText.setFace('helvetica')
                 fieldText.setSize(15)
                 fieldText.setFill("white")
@@ -76,4 +74,5 @@ class HomeScreen:
     def drag(self, e):
         pass
     def drop(self, e):
-        self.gameWindow.playGame()
+        if self.playButton.isPressed(e.x, e.y):
+            self.gameWindow.playGame()
