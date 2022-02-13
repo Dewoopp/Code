@@ -54,18 +54,31 @@ class HomeScreen:
 
         data = self.gameDb.getData()
 
-        for i, row in enumerate(data):
-            lbRow = []
-            for j, field in enumerate(row):
-                fieldText = Text(Point(self.window.width/3.35 + 100 * j, self.window.height/2 + 50 * i), field)
-                fieldText.setFace('helvetica')
-                fieldText.setSize(15)
-                fieldText.setFill("white")
-                fieldText.draw(self.window)
-                lbRow.append(fieldText)
-            self.delLbRows.append(lbRow)
+        headingData = ["Place", "Name", "Moves", "Time(s)", "Score"]
 
-        print(data)
+        if len(data) > 0:
+            lbRow = []
+            for i in range(len(data[0])):
+                headingText = Text(Point(self.window.width/3.35 + 100 * i, self.window.height/2 - 50), headingData[i])
+                headingText.setFace('helvetica')
+                headingText.setSize(15)
+                headingText.setFill("white")
+                headingText.draw(self.window)
+                lbRow.append(headingText)
+            self.delLbRows.append(lbRow)
+            
+            for i, row in enumerate(data):
+                lbRow = []
+                for j, field in enumerate(row):
+                    fieldText = Text(Point(self.window.width/3.35 + 100 * j, self.window.height/2 + 50 * i), field)
+                    fieldText.setFace('helvetica')
+                    fieldText.setSize(15)
+                    fieldText.setFill("white")
+                    fieldText.draw(self.window)
+                    lbRow.append(fieldText)
+                self.delLbRows.append(lbRow)
+
+            print(data)
 
 
 
