@@ -66,6 +66,12 @@ class PlayingArea:
         self.dropToBe = None
 
 
+        self.scoreText = Text(Point(self.window.width - 100, self.window.height - 50), "")
+        self.scoreText.setFace("courier")
+        self.scoreText.setFill("black")
+        self.scoreText.setSize(20)
+
+
     # Adds a callback to call the validator function and the function to turn over the cards
     def setValidator(self, validatorFunc, turnCardsFunc):
         self.validatorFunc = validatorFunc
@@ -77,11 +83,13 @@ class PlayingArea:
         if not self.backDrawn:
             self.background.draw(self.window)
             self.backDrawn = True
+            print("start")
+            self.tickTimer = self.window.getRoot().after(500, self.showScore)
         self.displayStacks()
         self.displaySuitStacks()
         self.displayDeckDiscard()
         self.displayDeck()
-        
+        self.scoreText.draw(self.window)
 
     # Undraws everything
     def undraw(self, screenChange):
@@ -101,6 +109,7 @@ class PlayingArea:
                     card.undraw()
         if self.deckImg is not None:
             self.deckImg.undraw()
+        self.scoreText.undraw()
 
     # Displays the stacks
     def displayStacks(self):
@@ -202,6 +211,8 @@ class PlayingArea:
             print("You won")
             self.winRect.draw(self.window)
             self.winRectText.draw(self.window)
+            self.showScore()
+            self.tickTimer.stop()
 
 
     def click(self, e):
@@ -248,3 +259,9 @@ class PlayingArea:
 
     def isClicked(self, x, y, midPoint):
         return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
+
+    def showScore(self):
+        elapsed = int(self.gameState.elapsedTime())
+        scoreStr = str(self.gameState.moves) + " " + str(elapsed)
+        self.scoreText.setText(scoreStr)
+        self.window.getRoot().after(500, self.showScore)

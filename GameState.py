@@ -1,6 +1,7 @@
 from Cards import CardDeck
 from CardStack import CardStack
 from SuitStack import SuitStack
+from time import time
 
 class GameState:
 
@@ -9,13 +10,21 @@ class GameState:
         #Create deck
         self.cardDeck = CardDeck()
 
+        self.startTime = 0
+        self.moves = 0
+
+        self.startCards = []
+
         #Creates 7 lists of increasing no. of cards - creates each card stack
         self.cardStacks = []
         for i in range(7):
             cardStack = CardStack(i)
             for j in range(i + 1):
-                cardStack.append(self.cardDeck.topCard())
+                topCard = self.cardDeck.topCard()
+                cardStack.append(topCard)
                 self.cardDeck.removeTop()
+                if i == j:
+                    self.startCards.append(topCard)
             self.cardStacks.append(cardStack)
 
         #Create suit stacks
@@ -28,6 +37,9 @@ class GameState:
         self.deckDiscard = []
 
     def makeMove(self, clickedCards, dropName, dropIdx):
+        if self.startTime == 0:
+            self.startTime = time()
+        self.moves += 1
         #find source card
         if clickedCards[0] in self.deckDiscard:
             sourceCards = [self.deckDiscard[-1]]
@@ -55,4 +67,9 @@ class GameState:
         for stack in self.cardStacks:
             if stack.backNum != 0:
                 return False
+        self.totalTime = self.elapsedTime()
         return True
+
+    def elapsedTime(self):
+        return 0 if self.startTime == 0 else time() - self.startTime
+        

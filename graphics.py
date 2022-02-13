@@ -235,6 +235,9 @@ class GraphWin(tk.Canvas):
         self.lastKey = ""
         if autoflush: _root.update()
 
+    def getRoot(self):
+        return _root
+        
     def __repr__(self):
         if self.isClosed():
             return "<Closed GraphWin>"
