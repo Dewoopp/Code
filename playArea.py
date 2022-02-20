@@ -65,6 +65,7 @@ class PlayingArea:
 
         self.dropToBe = None
 
+        self.scoreTimer = True
 
         self.scoreText = Text(Point(self.window.width - 100, self.window.height - 50), "")
         self.scoreText.setFace("courier")
@@ -84,7 +85,8 @@ class PlayingArea:
             self.background.draw(self.window)
             self.backDrawn = True
             print("start")
-            self.tickTimer = self.window.getRoot().after(500, self.showScore)
+            self.scoreTimer = True
+            self.window.getRoot().after(500, self.showScore)
         self.displayStacks()
         self.displaySuitStacks()
         self.displayDeckDiscard()
@@ -212,7 +214,7 @@ class PlayingArea:
             self.winRect.draw(self.window)
             self.winRectText.draw(self.window)
             self.showScore()
-            self.tickTimer.stop()
+            self.scoreTimer = False
 
 
     def click(self, e):
@@ -261,7 +263,10 @@ class PlayingArea:
         return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
 
     def showScore(self):
+
         elapsed = int(self.gameState.elapsedTime())
         scoreStr = str(self.gameState.moves) + " " + str(elapsed)
         self.scoreText.setText(scoreStr)
+        if not self.scoreTimer:
+            return
         self.window.getRoot().after(500, self.showScore)

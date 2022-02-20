@@ -36,8 +36,6 @@ class CardDeck:
                 self.cards.append(currCard)
         #Shuffles the deck
         self.shuffleDeck()
-        self.createTestCase()
-
 
     def shuffleDeck(self):
         #Shuffle the cards
@@ -48,12 +46,6 @@ class CardDeck:
             if card == cardToSwap:
                 self.cards[cardIdx], self.cards[i] = self.cards[i], self.cards[cardIdx]
                 break
-
-    def createTestCase(self):
-        self.swapCards(self.getCard("S", 7), 0)
-        self.swapCards(self.getCard("C", 7), 2)
-        self.swapCards(self.getCard("D", 8), 5)
-        self.swapCards(self.getCard("S", 13), 9)
 
     def getCard(self, suit, number):
         for card in self.cards:

@@ -4,22 +4,31 @@ from playArea import PlayingArea
 from homeScreen import HomeScreen
 from gameWindow import GameWindow
 from Database import GameDb
+import argparse
 
 def main():
+
+    # Create the parser and add arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', type = str, help="name a test case")
+
+    # Parse and print the results
+    args = parser.parse_args()
+    print(args.t)
 
     gameDb = GameDb()
     #gameDb.deleteTable()
     #gameDb.createTestData()
     #gameDb.getData()
 
-    gameState = GameState()
+    gameState = GameState(args.t)
 
     # Creates the windows
     gameWindow = GameWindow(gameState)
     homeScreen = HomeScreen(gameWindow, gameDb)
     playingArea = PlayingArea(gameWindow, gameState)
     gameWindow.addScreens(homeScreen, playingArea)
-    gameWindow.setActiveScreen(homeScreen)
+    gameWindow.setActiveScreen(homeScreen if args.t is None else playingArea)
 
     
     gameController = GameController(playingArea, gameState, gameDb)
