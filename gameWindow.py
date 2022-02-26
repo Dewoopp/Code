@@ -31,6 +31,11 @@ class GameWindow:
         self.activeScreen = self.playArea
         self.playArea.draw()
 
+    def returnHome(self):
+        self.playArea.undraw(True)
+        self.activeScreen = self.homeScreen
+        self.homeScreen.draw()
+
     def drag(self, e):
         self.activeScreen.drag(e)
     def drop(self, e):

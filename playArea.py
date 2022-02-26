@@ -1,10 +1,11 @@
-from graphics import GraphWin, Rectangle, Point, _root, Image, Text
+from graphics import GraphWin, Rectangle, Point, _root, Image, Text, Entry
 from time import sleep
+from Button import Button
 
 class PlayingArea:
 
     # Defines the positions of everything on the window
-    def __init__(self, gameWindow, gameState):
+    def __init__(self, gameWindow, gameState, gameDb):
         self.pos =  {
                     "Stacks": [],
                     "SuitStacks": [],
@@ -14,6 +15,7 @@ class PlayingArea:
         
         # Defines the window
         self.gameWindow = gameWindow
+        self.gameDb = gameDb
         self.window = self.gameWindow.window
 
         # Sets the background colour
@@ -22,10 +24,21 @@ class PlayingArea:
 
         self.winRect = Rectangle(Point(self.window.width/6, self.window.height/4), Point(self.window.width * 5/6, self.window.height * 3/4))
         self.winRect.setFill("yellow")
-        self.winRectText = Text(Point(self.window.width/2, self.window.height/2), "YOU WIN!!!")
+
+        self.winRectText = Text(Point(self.window.width/2, self.window.height/3 + 75), "YOU WIN!!!")
         self.winRectText.setFace("courier")
         self.winRectText.setFill("black")
         self.winRectText.setSize(70)
+
+        self.userNameText = Text(Point(self.window.width/2, self.window.height * 3/5 - 50), "Enter your name:")
+        self.userNameText.setFace("courier")
+        self.userNameText.setFill("black")
+        self.userNameText.setSize(30)
+
+        self.enterUserName = Entry(Point(self.window.width/2, self.window.height * 3/5), 10)
+        self.enterUserName.setSize(20)
+
+        self.enterButton = Button(self.window.width/2, self.window.height * 3/5 + 50, 75, 50, "Enter")
 
         self.gameState = gameState
         
@@ -65,7 +78,7 @@ class PlayingArea:
 
         self.dropToBe = None
 
-        self.scoreTimer = True
+        self.scoreTimerRunning = True
 
         self.scoreText = Text(Point(self.window.width - 100, self.window.height - 50), "")
         self.scoreText.setFace("courier")
@@ -85,7 +98,7 @@ class PlayingArea:
             self.background.draw(self.window)
             self.backDrawn = True
             print("start")
-            self.scoreTimer = True
+            self.scoreTimerRunning = True
             self.window.getRoot().after(500, self.showScore)
         self.displayStacks()
         self.displaySuitStacks()
@@ -98,6 +111,11 @@ class PlayingArea:
         if screenChange:
             self.background.undraw()
             self.backDrawn = False
+            self.enterUserName.undraw()
+            self.userNameText.undraw()
+            self.winRect.undraw()
+            self.winRectText.undraw()
+            self.enterButton.undraw()
         for card in self.removeImgs:
             card.undraw()
         for card in self.deckDiscardImg:
@@ -171,9 +189,8 @@ class PlayingArea:
 
     # Called when the player initiates a drag
     def drag(self, e):
-
         # If we are already in a drag or we are trying to drag nothing
-        if self.inDrag or len(self.clickImgs) == 0:
+        if self.inDrag or len(self.clickImgs) == 0 or self.gameState.isGameOver():
             return
 
         # We are in a drag - sets flag to true
@@ -196,13 +213,18 @@ class PlayingArea:
         self.dropToBe = None
 
     def drop(self, e):
-        # If we are in a drag, sets a drop to do later
-        if self.inDrag:
-            self.dropToBe = (e.x, e.y)
-        # If we aren't in a drag, do the drop now
+        if not self.gameState.isGameOver():
+            # If we are in a drag, sets a drop to do later
+            if self.inDrag:
+                self.dropToBe = (e.x, e.y)
+            # If we aren't in a drag, do the drop now
+            else:
+                self.doDrop(e.x, e.y)
+                self.dropToBe = None
         else:
-            self.doDrop(e.x, e.y)
-            self.dropToBe = None
+            if self.enterButton.isPressed(e.x, e.y):
+                self.gameDb.addWinner(self.enterUserName.getText(), self.gameState.moves, self.elapsed)
+                self.gameWindow.returnHome()
 
     def doDrop(self, x, y):
         # Sets the neccessary variables required for a drop
@@ -214,14 +236,17 @@ class PlayingArea:
             self.winRect.draw(self.window)
             self.winRectText.draw(self.window)
             self.showScore()
-            self.scoreTimer = False
-
+            self.scoreTimerRunning = False
+            self.enterUserName.draw(self.window)
+            self.userNameText.draw(self.window)
+            self.enterButton.draw(self.window)
 
     def click(self, e):
-        # Sets the neccessary variables and uses them later when dropping
-        self.clickImgs, self.clickName, self.clickIdx, self.clickCards, _ = self.findEventLocation(e.x, e.y)
-        if self.clickName == "Deck":
-            self.turnCardsFunc()
+        if not self.gameState.isGameOver():
+            # Sets the neccessary variables and uses them later when dropping
+            self.clickImgs, self.clickName, self.clickIdx, self.clickCards, _ = self.findEventLocation(e.x, e.y)
+            if self.clickName == "Deck":
+                self.turnCardsFunc()
 
     # This is used to set variables for both a drop and a click
     def findEventLocation(self, x, y):
@@ -263,10 +288,9 @@ class PlayingArea:
         return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
 
     def showScore(self):
-
-        elapsed = int(self.gameState.elapsedTime())
-        scoreStr = str(self.gameState.moves) + " " + str(elapsed)
+        self.elapsed = int(self.gameState.elapsedTime())
+        scoreStr = str(self.gameState.moves) + " " + str(self.elapsed)
         self.scoreText.setText(scoreStr)
-        if not self.scoreTimer:
+        if not self.scoreTimerRunning:
             return
         self.window.getRoot().after(500, self.showScore)

@@ -11,22 +11,20 @@ def main():
     # Create the parser and add arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', type = str, help="name a test case")
+    parser.add_argument('-d', type = str, help="database action (delete or create test)")
 
     # Parse and print the results
     args = parser.parse_args()
     print(args.t)
 
-    gameDb = GameDb()
-    #gameDb.deleteTable()
-    #gameDb.createTestData()
-    #gameDb.getData()
+    gameDb = GameDb(args.d)
 
     gameState = GameState(args.t)
 
     # Creates the windows
     gameWindow = GameWindow(gameState)
     homeScreen = HomeScreen(gameWindow, gameDb)
-    playingArea = PlayingArea(gameWindow, gameState)
+    playingArea = PlayingArea(gameWindow, gameState, gameDb)
     gameWindow.addScreens(homeScreen, playingArea)
     gameWindow.setActiveScreen(homeScreen if args.t is None else playingArea)
 

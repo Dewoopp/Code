@@ -1,15 +1,14 @@
 from graphics import Rectangle, Point, Text
 
 class Button:
-    def __init__(self, x, y, text):
+    def __init__(self, x, y, w, h, text):
         self.button = None
 
         self.text = text
         self.x = x
         self.y = y
-
-        self.buttonWidth = 150
-        self.buttonHeight = 100
+        self.buttonWidth = w
+        self.buttonHeight = h
         
     def draw(self, window):
         self.button = Rectangle(Point(self.x - self.buttonWidth/2, self.y - self.buttonHeight/2), Point(self.x + self.buttonWidth/2, self.y + self.buttonHeight/2))
