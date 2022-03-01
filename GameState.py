@@ -109,6 +109,9 @@ class GameState:
         elif testCase == "win":
             self.cardDeck.swapCards(self.cardDeck.getCard("D", 12), 36)
             self.cardDeck.swapCards(self.cardDeck.getCard("S", 13), 35)
+        elif testCase == "queen_king":
+            self.cardDeck.swapCards(self.cardDeck.getCard("D", 12), 0)
+            self.cardDeck.swapCards(self.cardDeck.getCard("H", 13), 2)
 
     # Creates the test cases that need to modify the entire game state
     def createStateTestCase(self, testCase):
