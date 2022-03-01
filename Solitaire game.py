@@ -17,6 +17,7 @@ def main():
     args = parser.parse_args()
     print(args.t)
 
+    # Creates a copy of the database
     gameDb = GameDb(args.d)
 
     gameState = GameState(args.t)
@@ -28,35 +29,20 @@ def main():
     gameWindow.addScreens(homeScreen, playingArea)
     gameWindow.setActiveScreen(homeScreen if args.t is None else playingArea)
 
-    
+    # Creates instances of the controller and the play area
     gameController = GameController(playingArea, gameState, gameDb)
     playingArea.setValidator(gameController.makeValidDrop, gameController.turnCards)
 
+    # Draws the active screen
     gameWindow.drawActiveScreen()
-    
-    
-    
 
-
-    #playingArea.root.mainloop()
-
+    # Main loops that waits for user input
     playgame = True
     while playgame == True:
         clickPos = gameWindow.getMouse()
         if clickPos is None:
             break
-        # mouseX = int(clickPos.x)
-        # mouseY = int(clickPos.y)
-    #Load top 10 score
-    #Check clicked on deck
-    #Check if clicked on one of 7 packs
-    #Check if card valid
-    #Check for game over
-    #Check for restart button press
 
     playingArea.window.close()
-    #Add to top 10 if score is a new top 10
-    #Display top 10
-    #Ask to play again
 
 main()

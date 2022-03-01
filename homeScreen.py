@@ -7,7 +7,9 @@ class HomeScreen:
     def __init__(self, gameWindow, gameDb):
         self.gameWindow = gameWindow
         self.window = self.gameWindow.window
+        # Defines the play button
         self.playButton = Button(self.window.width/2, self.window.height * 7/8, 150, 100, "Play")
+        # Sets the background rectangle
         self.background = Rectangle(Point(0,0), Point(1000, 750))
         self.background.setFill("grey")
 
@@ -15,6 +17,7 @@ class HomeScreen:
 
         self.gameDb = gameDb
 
+    # Undraws the screen
     def undraw(self):
         self.background.undraw()
         self.playButton.undraw()
@@ -26,31 +29,36 @@ class HomeScreen:
             for field in row:
                 field.undraw()
 
-
+    # Draws the screen
     def draw(self):
         self.background.draw(self.window)
         self.playButton.draw(self.window)
 
+        # Defines the title text
         self.titleText = Text(Point(self.window.width/2, self.window.height/8), "Solitaire")
         self.titleText.setFace('courier')
         self.titleText.setSize(70)
         self.titleText.setFill("white")
         self.titleText.draw(self.window)
         
+        # Defines the subtitle text
         self.subtitleText = Text(Point(self.window.width/2, self.window.height/5), "by Joe Dobson")
         self.subtitleText.setFace('courier')
         self.subtitleText.setSize(30)
         self.subtitleText.setFill("white")
         self.subtitleText.draw(self.window)
         
+        # Defines the leaderboard text
         self.scoreText = Text(Point(self.window.width/2, self.window.height/3), "Leaderboard")
         self.scoreText.setFace('helvetica')
         self.scoreText.setSize(20)
         self.scoreText.setFill("white")
         self.scoreText.draw(self.window)
         
+        # Gets the data from the database
         data = self.gameDb.getData()
 
+        # Sets the data for the headings
         headingData = ["Place", "Name", "Moves", "Time(s)", "Score"]
 
         if len(data) > 0:
@@ -71,6 +79,7 @@ class HomeScreen:
                     break
                 lbRow = []
                 for j, field in enumerate(row):
+                    # Creates the rank of the winners
                     fieldText = Text(Point(self.window.width/3.35 + 100 * j, self.window.height/2 + 50 * i), field if j != 0 else i+1)
                     fieldText.setFace('helvetica')
                     fieldText.setSize(15)
@@ -79,12 +88,11 @@ class HomeScreen:
                     lbRow.append(fieldText)
                 self.delLbRows.append(lbRow)
 
-            print(data)
-
     def click(self, e):
         pass
     def drag(self, e):
         pass
     def drop(self, e):
+        # If the press the play button then start the game
         if self.playButton.isPressed(e.x, e.y):
             self.gameWindow.playGame()

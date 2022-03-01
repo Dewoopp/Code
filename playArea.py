@@ -22,9 +22,9 @@ class PlayingArea:
         self.background = Rectangle(Point(0,0), Point(1000, 750))
         self.background.setFill("green")
 
+        # Defines the win rectangle and the text
         self.winRect = Rectangle(Point(self.window.width/6, self.window.height/4), Point(self.window.width * 5/6, self.window.height * 3/4))
         self.winRect.setFill("yellow")
-
         self.winRectText = Text(Point(self.window.width/2, self.window.height/3 + 75), "YOU WIN!!!")
         self.winRectText.setFace("courier")
         self.winRectText.setFill("black")
@@ -35,9 +35,11 @@ class PlayingArea:
         self.userNameText.setFill("black")
         self.userNameText.setSize(30)
 
+        # Adds an element that can be typed into
         self.enterUserName = Entry(Point(self.window.width/2, self.window.height * 3/5), 10)
         self.enterUserName.setSize(20)
 
+        # Defines the enter button
         self.enterButton = Button(self.window.width/2, self.window.height * 3/5 + 50, 75, 50, "Enter")
 
         self.gameState = gameState
@@ -73,12 +75,12 @@ class PlayingArea:
         self.suitStackTopImg = [None for _ in range(4)]
         self.stackTopImg =  [[] for _ in range(7)]
 
-        # 
         self.removeImgs = []
 
         self.dropToBe = None
 
         self.scoreTimerRunning = True
+
 
         self.scoreText = Text(Point(self.window.width - 100, self.window.height - 50), "")
         self.scoreText.setFace("courier")
@@ -94,11 +96,12 @@ class PlayingArea:
     # Undraws then redraws the entire board - used after dropping anything in order to update the GUI
     def draw(self):
         self.undraw(False)
+        # If the background is not drawn 
         if not self.backDrawn:
             self.background.draw(self.window)
             self.backDrawn = True
-            print("start")
             self.scoreTimerRunning = True
+            # Starts the calling of the timer function
             self.window.getRoot().after(500, self.showScore)
         self.displayStacks()
         self.displaySuitStacks()
@@ -108,6 +111,7 @@ class PlayingArea:
 
     # Undraws everything
     def undraw(self, screenChange):
+        # If we are changing screen
         if screenChange:
             self.background.undraw()
             self.backDrawn = False
