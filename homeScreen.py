@@ -19,12 +19,16 @@ class HomeScreen:
 
     # Undraws the screen
     def undraw(self):
+        # Undraws the background and play button
         self.background.undraw()
         self.playButton.undraw()
+        # Undraws the title if it exists
         if self.titleText is not None:
             self.titleText.undraw()
+        # Undraws the subtitle if it exists
         if self.subtitleText is not None:
             self.subtitleText.undraw()
+        # Undraws everything in delLbRows, which contains all the leaderboard text on the screen
         for row in self.delLbRows:
             for field in row:
                 field.undraw()
@@ -71,10 +75,12 @@ class HomeScreen:
                 headingText.setFill("white")
                 headingText.draw(self.window)
                 lbRow.append(headingText)
+            # Adds the row of text to delLbRows, which is used to undraw the text
             self.delLbRows.append(lbRow)
             
             # Displays the data from the database
             for i, row in enumerate(data):
+                # Ensures that only the top 5 players will be displayed
                 if i >= 5:
                     break
                 lbRow = []
@@ -84,8 +90,10 @@ class HomeScreen:
                     fieldText.setFace('helvetica')
                     fieldText.setSize(15)
                     fieldText.setFill("white")
+                    # Draws the text
                     fieldText.draw(self.window)
                     lbRow.append(fieldText)
+                # Adds the row of text to delLbRows, which is used to undraw the text
                 self.delLbRows.append(lbRow)
 
     def click(self, e):
@@ -93,6 +101,6 @@ class HomeScreen:
     def drag(self, e):
         pass
     def drop(self, e):
-        # If the press the play button then start the game
+        # If the user pressed the play button then start the game
         if self.playButton.isPressed(e.x, e.y):
             self.gameWindow.playGame()

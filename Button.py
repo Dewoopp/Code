@@ -13,14 +13,18 @@ class Button:
         
     # Draws the button
     def draw(self, window):
+        # Defines the button
         self.button = Rectangle(Point(self.x - self.buttonWidth/2, self.y - self.buttonHeight/2), Point(self.x + self.buttonWidth/2, self.y + self.buttonHeight/2))
         self.button.setFill("black")
+        # Draws the button
         self.button.draw(window)
         if self.text is not None:
+            # Sets the text for the button
             self.buttonText = Text(Point(self.x, self.y), self.text)
             self.buttonText.setFace('courier')
             self.buttonText.setSize(15)
             self.buttonText.setFill("white")
+            # Draws the text
             self.buttonText.draw(window)
 
     # Undraws the button

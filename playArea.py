@@ -4,8 +4,9 @@ from Button import Button
 
 class PlayingArea:
 
-    # Defines the positions of everything on the window
+    # Passes in the window, gameState and database
     def __init__(self, gameWindow, gameState, gameDb):
+    # Defines the positions of everything on the window
         self.pos =  {
                     "Stacks": [],
                     "SuitStacks": [],
@@ -30,6 +31,7 @@ class PlayingArea:
         self.winRectText.setFill("black")
         self.winRectText.setSize(70)
 
+        # Defines the text that tells the user to enter their name
         self.userNameText = Text(Point(self.window.width/2, self.window.height * 3/5 - 50), "Enter your name:")
         self.userNameText.setFace("courier")
         self.userNameText.setFill("black")
@@ -69,7 +71,7 @@ class PlayingArea:
         # The distance between cards in the stacks
         self.stackCardDist = 30
 
-        # Sets lists and variables to be set and used later
+        # Sets lists and variables to be set and used when drawing and undrawing elements on the page
         self.deckImg = None
         self.deckDiscardImg = []
         self.suitStackTopImg = [None for _ in range(4)]
@@ -81,7 +83,7 @@ class PlayingArea:
 
         self.scoreTimerRunning = True
 
-
+        # Defines the text that displays the score
         self.scoreText = Text(Point(self.window.width - 100, self.window.height - 50), "")
         self.scoreText.setFace("courier")
         self.scoreText.setFill("black")
@@ -98,11 +100,14 @@ class PlayingArea:
         self.undraw(False)
         # If the background is not drawn 
         if not self.backDrawn:
+            # Draws the background
             self.background.draw(self.window)
+            # Sets the background to drawn
             self.backDrawn = True
             self.scoreTimerRunning = True
             # Starts the calling of the timer function
             self.window.getRoot().after(500, self.showScore)
+        # Calls the display functions for everything in the game
         self.displayStacks()
         self.displaySuitStacks()
         self.displayDeckDiscard()
@@ -113,26 +118,34 @@ class PlayingArea:
     def undraw(self, screenChange):
         # If we are changing screen
         if screenChange:
+            # Undraws the background
             self.background.undraw()
             self.backDrawn = False
+            # Undraws everything for the home screen
             self.enterUserName.undraw()
             self.userNameText.undraw()
             self.winRect.undraw()
             self.winRectText.undraw()
             self.enterButton.undraw()
+        # Undraws cards
         for card in self.removeImgs:
             card.undraw()
+        # Undraws cards in the deck discard
         for card in self.deckDiscardImg:
             card.undraw()
+        # Undraws cards in the suit stacks
         for card in self.suitStackTopImg:
             if card is not None:
                 card.undraw()
+        # Undraws cards in the stacks
         for stack in self.stackTopImg:
             for card in stack:
                 if card is not None:
                     card.undraw()
+        # Undraws the deck
         if self.deckImg is not None:
             self.deckImg.undraw()
+        # Undraws the score text
         self.scoreText.undraw()
 
     # Displays the stacks
@@ -235,11 +248,13 @@ class PlayingArea:
         _, dropName, dropIdx, dropCard, dropStackLocation = self.findEventLocation(x, y)
         # Calls the validation 
         self.validatorFunc(self.clickName, self.clickIdx, self.clickCards, dropName, dropIdx, dropCard, dropStackLocation)
+        # If the game is over
         if self.gameState.isGameOver():
             print("You won")
             self.winRect.draw(self.window)
             self.winRectText.draw(self.window)
             self.showScore()
+            # Stop the timer
             self.scoreTimerRunning = False
             self.enterUserName.draw(self.window)
             self.userNameText.draw(self.window)
@@ -288,9 +303,11 @@ class PlayingArea:
     #     else:
     #         return None
 
+    # Checks if the card is clicked
     def isClicked(self, x, y, midPoint):
         return (midPoint.x - self.cardWidth/2 <= x <= midPoint.x + self.cardWidth/2) and (midPoint.y - self.cardHeight/2 <= y <= midPoint.y + self.cardHeight/2)
 
+    # Displays the score
     def showScore(self):
         self.elapsed = int(self.gameState.elapsedTime())
         scoreStr = str(self.gameState.moves) + " " + str(self.elapsed)
