@@ -95,6 +95,7 @@ class PlayingArea:
 
     # Undraws then redraws the entire board - used after dropping anything in order to update the GUI
     def draw(self):
+        # Calls the undraw function to wipe the screen
         self.undraw(False)
         # If the background is not drawn 
         if not self.backDrawn:

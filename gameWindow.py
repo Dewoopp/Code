@@ -5,7 +5,7 @@ class GameWindow:
     def __init__(self, gameState):
 
         self.gameState = gameState
-        self.window = GraphWin("Screen", 1000, 750)
+        self.window = GraphWin("Solitaire", 1000, 750)
 
         self.activeScreen = None
 

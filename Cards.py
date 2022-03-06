@@ -8,7 +8,7 @@ class Card:
         self.colour = colour
         self.fileName = fileName
 
-    # Getter fucntion to return the card name
+    # Getter function to return the card name
     def cardName(self):
         cardName = self.suit + str(self.number)
         return cardName

@@ -43,7 +43,7 @@ class GameDb:
         showData = """
                     SELECT ROWID, *
                     FROM SCORES
-                    ORDER BY Score DESC
+                    ORDER BY Score ASC
                 """
 
         data = []
