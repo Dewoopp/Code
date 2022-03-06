@@ -37,16 +37,20 @@ class GameController:
 
     # Puts the deck discard back into the deck
     def turnCards(self):
+        # If the card deck is empty
         if self.gameState.cardDeck.isEmpty():
+            # Sets the card deck to the deck discard
             self.gameState.cardDeck.cards = self.gameState.deckDiscard
+            # Empties the dcek discard
             self.gameState.deckDiscard = []
         else:
             # Move and remove using slice
             # Gets the length of the deck if it is less than 3, otherwise gets 3
             numToMove = min(3, len(self.gameState.cardDeck.cards))
-            # Adds those cards to the deck discard
+            # Adds those cards to the deck discard by extending the deck discard by a slice of the deck
             self.gameState.deckDiscard.extend(self.gameState.cardDeck.cards[:numToMove])
-            # Removes those card from the deck
+            # Removes those card from the deck by setting the deck to a slice of itself using
+            # the number of cards as a guide
             self.gameState.cardDeck.cards = self.gameState.cardDeck.cards[numToMove:]
 
             # # Move and remove using list comp

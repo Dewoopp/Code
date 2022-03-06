@@ -17,20 +17,25 @@ def main():
     args = parser.parse_args()
     print(args.t)
 
-    # Creates a copy of the database
+    # Creates a copy of the database and passes in the database argument
     gameDb = GameDb(args.d)
 
+    # Create a gameState and passes in the test case argument
     gameState = GameState(args.t)
 
     # Creates the windows
     gameWindow = GameWindow(gameState)
     homeScreen = HomeScreen(gameWindow, gameDb)
     playingArea = PlayingArea(gameWindow, gameState, gameDb)
+    # Adds new screens
     gameWindow.addScreens(homeScreen, playingArea)
+    # Sets the active screen to be the home screen if there is no argument
+    # If there is, then it sets the active screen to the game screen
     gameWindow.setActiveScreen(homeScreen if args.t is None else playingArea)
 
     # Creates instances of the controller and the play area
     gameController = GameController(playingArea, gameState, gameDb)
+    # Sets the validator function
     playingArea.setValidator(gameController.makeValidDrop, gameController.turnCards)
 
     # Draws the active screen

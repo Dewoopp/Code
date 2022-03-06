@@ -1,7 +1,8 @@
 class CardStack:
     def __init__(self, backNum):
+        # Sets the list of cards in the stack
         self.cards = []
-        # Sets the number of cards that are back up (cannot be clicked on)
+        # Sets the number of cards that are back up (cannot be interacted with)
         self.backNum = backNum
 
     # Uses an exception to try to find the card

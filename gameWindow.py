@@ -5,6 +5,7 @@ class GameWindow:
     def __init__(self, gameState):
 
         self.gameState = gameState
+        # Defines the window for either the game or the home screen
         self.window = GraphWin("Solitaire", 1000, 750)
 
         self.activeScreen = None
