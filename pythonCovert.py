@@ -29,7 +29,7 @@ def ending_insert(linestart,endstatement):
     z=(" "*start_spaces)+endstatement
     python_processing.insert(current_line,z)
 
-MyPython = open("Cards.py")
+MyPython = open("CardStack.py")
 for line in MyPython:
     line = line.strip('\n')
     python_processing.append(line)
