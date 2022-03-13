@@ -29,7 +29,7 @@ def ending_insert(linestart,endstatement):
     z=(" "*start_spaces)+endstatement
     python_processing.insert(current_line,z)
 
-MyPython = open("CardStack.py")
+MyPython = open("InsertionSort.py")
 for line in MyPython:
     line = line.strip('\n')
     python_processing.append(line)
